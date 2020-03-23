@@ -4,7 +4,7 @@ import os
 
 data = []
 skip = True
-for line in open('covidpy.csv')
+for line in open('covidpy.csv'):
     if skip:
         skip = False
         continue
