@@ -1,4 +1,5 @@
 from flask import Flask, jsonify, request
+from flask_cors import CORS, cross_origin
 from datetime import datetime
 import os
 
@@ -18,8 +19,12 @@ for line in open('covidpy.csv'):
     })
 
 app = Flask(__name__)
+cors = CORS(app)
+app.config['CORS_HEADERS'] = 'Content-Type'
+
 
 @app.route('/')
+@cross_origin()
 def main():
     return jsonify(data), 200
 
