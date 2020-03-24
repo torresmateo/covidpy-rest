@@ -55,7 +55,7 @@ def expanded():
             'cum_deaths':int(r.cum_deaths),
             'cum_tested':int(r.cum_tested),
         })
-    return 
+    return jsonify(res), 200
 
 if __name__ == "__main__":
     app.run()
