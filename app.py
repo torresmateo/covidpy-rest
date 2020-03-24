@@ -41,7 +41,7 @@ def main():
 
 @app.route('/expanded')
 @cross_origin()
-def recharts():
+def expanded():
     res = []
     for i,r in covpy.iterrows():
         #'date', 'new_cases', 'new_deaths', 'tested', 'recovered', 'cum_cases','cum_deaths', 'cum_tested'
@@ -50,7 +50,7 @@ def recharts():
             'cases':int(r.new_cases), 
             'deaths':int(r.new_deaths), 
             'tests':int(r.tested), 
-            'recoveries':int(r,recovered),
+            'recoveries':int(r.recovered),
             'cum_cases':int(r.cum_cases),
             'cum_deaths':int(r.cum_deaths),
             'cum_tested':int(r.cum_tested),
