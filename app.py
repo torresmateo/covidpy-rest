@@ -19,7 +19,7 @@ for line in open('covidpy.csv'):
         'recoveries':int(recoveries)
     })
 
-covpy = pd.read_csv('../data/real_data_py.csv', parse_dates=[0], index_col='date')
+covpy = pd.read_csv('covidpy.csv', parse_dates=[0], index_col='date')
 covpy = covpy.resample('D').asfreq().fillna(0)
 covpy['cum_cases'] = covpy['new_cases'].cumsum()
 covpy['cum_deaths'] = covpy['new_deaths'].cumsum()
