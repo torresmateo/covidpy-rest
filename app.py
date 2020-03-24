@@ -10,20 +10,22 @@ for line in open('covidpy.csv'):
     if skip:
         skip = False
         continue
-    date, cases, deaths, tests, recoveries = line.strip().split(',')
+    date, cases, deaths, tests, recovered = line.strip().split(',')
     data.append({
         'date':date, 
         'cases':int(cases), 
         'deaths':int(deaths), 
         'tests':int(tests), 
-        'recoveries':int(recoveries)
+        'recovered':int(recovered),
+        'total_male':int(total_male),
+        'total_female':int(total_female)
     })
 
 covpy = pd.read_csv('covidpy.csv', parse_dates=[0], index_col='date')
 covpy = covpy.resample('D').asfreq().fillna(0)
-covpy['cum_cases'] = covpy['new_cases'].cumsum()
-covpy['cum_deaths'] = covpy['new_deaths'].cumsum()
-covpy['cum_tested'] = covpy['tested'].cumsum()
+covpy['cum_cases'] = covpy['cases'].cumsum()
+covpy['cum_deaths'] = covpy['deaths'].cumsum()
+covpy['cum_tests'] = covpy['tests'].cumsum()
 covpy['cum_recovered'] = covpy['recovered'].cumsum()
 covpy.reset_index(inplace=True)
 
@@ -47,13 +49,15 @@ def expanded():
         #'date', 'new_cases', 'new_deaths', 'tested', 'recovered', 'cum_cases','cum_deaths', 'cum_tested'
         res.append({
             'date':r.date.strftime('%Y-%m-%d'), 
-            'cases':int(r.new_cases), 
-            'deaths':int(r.new_deaths), 
-            'tests':int(r.tested), 
-            'recoveries':int(r.recovered),
+            'cases':int(r.cases), 
+            'deaths':int(r.deaths), 
+            'tests':int(r.tests), 
+            'recovered':int(r.recovered),
             'cum_cases':int(r.cum_cases),
             'cum_deaths':int(r.cum_deaths),
             'cum_tested':int(r.cum_tested),
+            'total_male':int(r.total_male),
+            'total_female':int(r.total_female)
         })
     return jsonify(res), 200
 
