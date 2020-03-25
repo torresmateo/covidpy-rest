@@ -55,7 +55,7 @@ def expanded():
             'recovered':int(r.recovered),
             'cum_cases':int(r.cum_cases),
             'cum_deaths':int(r.cum_deaths),
-            'cum_tested':int(r.cum_tested),
+            'cum_tested':int(r.cum_tests),
             'total_male':int(r.total_male),
             'total_female':int(r.total_female)
         })
