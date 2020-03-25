@@ -10,7 +10,7 @@ for line in open('covidpy.csv'):
     if skip:
         skip = False
         continue
-    date, cases, deaths, tests, recovered, total_male, total_female = line.strip().split(',')
+    date, cases, deaths, tests, recovered, total_male, total_female, hospital, home, no_location = line.strip().split(',')
     data.append({
         'date':date, 
         'cases':int(cases), 
