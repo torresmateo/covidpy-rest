@@ -4,23 +4,6 @@ from datetime import datetime
 import pandas as pd
 import os
 
-data = []
-skip = True
-for line in open('covidpy.csv'):
-    if skip:
-        skip = False
-        continue
-    date, cases, deaths, tests, recovered, total_male, total_female, hospital, home, no_location = line.strip().split(',')
-    data.append({
-        'date':date, 
-        'cases':int(cases), 
-        'deaths':int(deaths), 
-        'tests':int(tests), 
-        'recovered':int(recovered),
-        'total_male':int(total_male),
-        'total_female':int(total_female)
-    })
-
 covpy = pd.read_csv('covidpy.csv', parse_dates=[0], index_col='date')
 covpy = covpy.resample('D').asfreq().fillna(0)
 covpy['cum_cases'] = covpy['cases'].cumsum()
@@ -38,7 +21,21 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 @app.route('/')
 @cross_origin()
 def main():
-    return jsonify(data), 200
+    res = []
+    for i,r in covpy.iterrows():
+        res.append({
+            'date':r.date.strftime('%Y-%m-%d'), 
+            'cases':int(r.cases), 
+            'deaths':int(r.deaths), 
+            'tests':int(r.tests), 
+            'recovered':int(r.recovered),
+            #'cum_cases':int(r.cum_cases),
+            #'cum_deaths':int(r.cum_deaths),
+            #'cum_tested':int(r.cum_tests),
+            'total_male':int(r.total_male),
+            'total_female':int(r.total_female)
+        })
+    return jsonify(res), 200
 
 
 @app.route('/expanded')
@@ -46,7 +43,6 @@ def main():
 def expanded():
     res = []
     for i,r in covpy.iterrows():
-        #'date', 'new_cases', 'new_deaths', 'tested', 'recovered', 'cum_cases','cum_deaths', 'cum_tested'
         res.append({
             'date':r.date.strftime('%Y-%m-%d'), 
             'cases':int(r.cases), 
