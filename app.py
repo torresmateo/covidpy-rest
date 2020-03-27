@@ -86,7 +86,7 @@ def logistic_prediction():
     estimate = [logistic_function(x, *params) for x in range(len(date_range))]
     return jsonify({
             'confirmed': df_.Confirmed.fillna(0).to_list(), 
-            'projected': projected.fillna(0).to_list(),
+            'projected': projected.fillna(0).astype(int).to_list(),
             'estimate':estimate,
             'dates':date_range
         }), 200
