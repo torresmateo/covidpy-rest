@@ -3,6 +3,8 @@ from flask_cors import CORS, cross_origin
 from datetime import datetime
 import pandas as pd
 import os
+from scipy import optimize
+
 
 covpy = pd.read_csv('covidpy.csv', parse_dates=[0], index_col='date')
 covpy = covpy.resample('D').asfreq().fillna(0)
