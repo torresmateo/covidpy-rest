@@ -1,9 +1,10 @@
 from flask import Flask, jsonify, request
 from flask_cors import CORS, cross_origin
-from datetime import datetime
+from datetime import datetime, timedelta
 import pandas as pd
 import os
 from scipy import optimize
+import numpy as np
 
 
 covpy = pd.read_csv('covidpy.csv', parse_dates=[0], index_col='date')
@@ -76,8 +77,8 @@ def logistic_prediction():
     # Append N new days to our indices
     date_format = '%Y-%m-%d'
     date_range = [date for date in country.index]
-    for _ in range(FUTURE_DAYS): date_range.append(date_range[-1] + datetime.timedelta(days=1))
-    date_range = [datetime.datetime.strftime(date, date_format) for date in date_range]
+    for _ in range(FUTURE_DAYS): date_range.append(date_range[-1] + timedelta(days=1))
+    date_range = [datetime.strftime(date, date_format) for date in date_range]
 
     projected = [0] * len(X) + [logistic_function(x, *params) for x in range(len(X), len(X) + FUTURE_DAYS)]
     projected = pd.Series(projected, index=date_range, name='Projected')
@@ -85,7 +86,7 @@ def logistic_prediction():
     estimate = [logistic_function(x, *params) for x in range(len(date_range))]
     return jsonify({
             'confirmed': df_.Confirmed.fillna(0).to_list(), 
-            'projected': projected,
+            'projected': projected.fillna(0).to_list(),
             'estimate':estimate,
             'dates':date_range
         }), 200
