@@ -57,5 +57,36 @@ def expanded():
         })
     return jsonify(res), 200
 
+def logistic_function(x: float, a: float, b: float, c: float):
+    ''' 1 / (1 + e^-x) '''
+    return a / (1.0 + np.exp(-b * (x - c)))
+
+@app.route('/logistic')
+@cross_origin()
+def logistic_prediction():
+    country = covpy[['date','cum_cases']].set_index('date')
+    X, y = list(range(len(country))), country['cum_cases'].tolist()
+    # Estimate model parameters
+    params, _ = optimize.curve_fit(logistic_function, X, y, maxfev=int(1E5), p0=[max(y), 1, np.median(X)])
+
+    FUTURE_DAYS = 2
+
+    # Append N new days to our indices
+    date_format = '%Y-%m-%d'
+    date_range = [date for date in country.index]
+    for _ in range(FUTURE_DAYS): date_range.append(date_range[-1] + datetime.timedelta(days=1))
+    date_range = [datetime.datetime.strftime(date, date_format) for date in date_range]
+
+    projected = [0] * len(X) + [logistic_function(x, *params) for x in range(len(X), len(X) + FUTURE_DAYS)]
+    projected = pd.Series(projected, index=date_range, name='Projected')
+    df_ = pd.DataFrame({'Confirmed': country['cum_cases'], 'Projected': projected})
+    estimate = [logistic_function(x, *params) for x in range(len(date_range))]
+    return jsonify({
+            'confirmed': df_.Confirmed.fillna(0).to_list(), 
+            'projected': projected,
+            'estimate':estimate,
+            'dates':date_range
+        }), 200
+
 if __name__ == "__main__":
     app.run()
