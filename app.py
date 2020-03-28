@@ -44,10 +44,11 @@ def send_js(path):
     return send_from_directory('data', path+'.json')
 
 
-if __name__ == "__main__":
-    print('it started!')
-    update_stuff()
-    print('it updated stuff..creating timer')
-    rt = RepeatedTimer(10 * 60, update_stuff)
-    print(os.listdir('./data'))
+print('it started!')
+update_stuff()
+print('it updated stuff..creating timer')
+rt = RepeatedTimer(10 * 60, update_stuff)
+print(os.listdir('./data'))
+
+if __name__ == '__main__':
     app.run()
