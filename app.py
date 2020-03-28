@@ -44,6 +44,9 @@ def send_js(path):
 
 
 if __name__ == "__main__":
+    print('it started!')
     update_stuff()
+    print('it updated stuff..creating timer')
     rt = RepeatedTimer(10 * 60, update_stuff)
+    print(os.listdir('./data'))
     app.run()
