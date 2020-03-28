@@ -2,6 +2,7 @@ from flask import Flask, request, send_from_directory
 from flask_cors import CORS, cross_origin
 from scripts import script as scripts
 from threading import Timer
+import os
 
 class RepeatedTimer(object):
     def __init__(self, interval, function, *args, **kwargs):
