@@ -31,7 +31,6 @@ class RepeatedTimer(object):
 def update_stuff():
     scripts.run()
 
-rt = RepeatedTimer(10 * 60, update_stuff)
 
 app = Flask(__name__)
 cors = CORS(app)
@@ -45,9 +44,6 @@ def send_js(path):
 
 
 if __name__ == "__main__":
-    t = Timer(10 * 60, update_stuff)
-    t.start()
-    t.join()
+    update_stuff()
+    rt = RepeatedTimer(10 * 60, update_stuff)
     app.run()
-
-# zsh oh-my-zsh
