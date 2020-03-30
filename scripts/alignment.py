@@ -110,30 +110,41 @@ def align(df):
         'Suriname': 'Surinam',
         'French Guiana': 'Guyana Francesa'}
 
-    br_y = df[(df['Country/Region'] == 'Brazil')].Confirmed.to_numpy()
+    br_y = df[(df['Country/Region'] == 'Brazil') & (df['Confirmed'] >= 1)].Confirmed.to_numpy()
+    br_dates = df[(df['Country/Region'] == 'Brazil') & (df['Confirmed'] >= 1)].Date.to_numpy()
     X = np.array(list(range(br_y.shape[0])))
 
     # to be made into a json
     data = {
         'ref_country': 'Brazil',  # TODO: pick the reference country programmatically
         'country_data': [
-            {'name': 'Brazil', 'offset': 0, 'data': [{'x': int(X[i]), 'y':int(
-                br_y[i])} for i in range(br_y.shape[0]) if (X[i] > 0) and (br_y[i] >= 1)]}
+            {'name': sp_names['Brazil'], 'offset': 0, 'data': [
+                {
+                    'y':int(br_y[i]), 
+                    'date':np.datetime_as_string(br_dates[i],unit='D'),
+                    'date_offset':np.datetime_as_string(br_dates[i],unit='D')
+                } for i in range(br_y.shape[0])
+            ]}
         ]
     }
 
     for c in south_america:
         if c in ['Brazil']:
             continue
-        df_c = df[(df['country_region'] == c)].sort_values('Date')
+        df_c = df[(df['country_region'] == c) & (df['Confirmed'] >= 1)].sort_values('Date')
         y = df_c.Confirmed.to_numpy()
+        dates = df_c.Date.to_numpy()
         if y.shape[0] > 0:
             X = np.array(list(range(df_c.shape[0])))
             y_data = y[y > 0]
             delta = diff(y_data, br_y)
             data['country_data'].append(
-                {'name': sp_names[c], 'offset': delta, 'data': [{'x': int(
-                    X[i] - delta), 'y':int(y[i])} for i in range(y.shape[0]) if (X[i] - delta > 0) and (y[i] >= 1)]}
+                {'name': sp_names[c], 'offset': delta, 'data': [
+                    {
+                        'y':int(y[i]), 
+                        'date':np.datetime_as_string(dates[i], unit='D'),
+                        'date_offset':np.datetime_as_string((dates[i] - np.timedelta64(delta, 'D')), unit='D')
+                    } for i in range(y.shape[0])]}
             )
     return data
 
