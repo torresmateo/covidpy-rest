@@ -1,4 +1,4 @@
-date,cases, deaths,tests,recovered,suspected,total_male,total_female,not_determined,hospital,home,no_location
+date,cases,deaths,tests,recovered,suspected,total_male,total_female,not_determined,hospital,home,no_location
 2020-03-07,  1,0,  1,0,-1,  1,  0, 0, 0,  0, 1
 2020-03-09,  0,0,  0,0,25,  1,  0, 0, 0,  0, 1
 2020-03-10,  4,0,  8,0,-1, -1, -1, 0, 0,  0, 5
